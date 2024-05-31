@@ -24,4 +24,25 @@ class Questions(Base):
     timer = Column(DateTime)
 
 
+class Result(Base):
+    __tablename__ = "results"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    correct_answers = Column(Integer, default=0)
+    level = Column(String, nullable=False)
 
+    user_fk = relationship(User, foreign_keys=[user_id], lazy="subquery")
+
+
+class UserAnswers(Base):
+    __tablename__ = "user_answers"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    q_id = Column(Integer, ForeignKey("questions.id"))
+    level = Column(String, ForeignKey("users.level"))
+    user_answer = Column(String, nullable=False)
+    correctness = Column(Boolean, default=False)
+    timer = Column(DateTime)
+
+    user_fk = relationship(User, foreign_keys=[user_id], lazy="subquery")
+    question_fk = relationship(Questions, foreign_keys=[q_id], lazy="subquery")
